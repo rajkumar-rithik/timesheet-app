@@ -1,4 +1,4 @@
-# my-app
+# timesheet-app
 
 ## Project setup
 ```
