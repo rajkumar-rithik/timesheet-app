@@ -31,7 +31,10 @@
 
             <v-card-text>
               <v-container>
-                <v-row>
+                <v-row
+                class="mb-5"
+                no-gutters
+                >
                   <v-col
                     cols="12"
                   >
@@ -45,14 +48,64 @@
                     cols="12"
                   >
                     <v-text-field
-                      v-model="editedItem.log_description"
-                      label="Log Description"
+                      v-model="editedItem.task_id"
+                      label="Task"
                       outlined
                     ></v-text-field>
                   </v-col>
                   <v-col
                     cols="12"
                   >
+                    <v-textarea
+                      v-model="editedItem.log_description"
+                      label="Log Description"
+                      maxlength="500"
+                      counter
+                      outlined
+                    ></v-textarea>
+                  </v-col>
+
+                    <v-checkbox
+                      v-model="period"
+                      :label="`Period`"
+                      class="ma-0"
+                    ></v-checkbox>
+
+                  <v-col
+                    cols="12"
+                    v-if="period"
+                  >
+
+                    <vc-date-picker v-model="range" is-range>
+                      <template v-slot="{ inputValue, inputEvents }">
+                        <div class="d-flex flex-row">
+                            <v-text-field
+                              v-model="inputValue.start"
+                              label="From Date"
+                              prepend-inner-icon="mdi-calendar"
+                              v-on="inputEvents.start"
+                              outlined
+                              class="border mr-3 focus:border-indigo-300"
+                            ></v-text-field>
+                            <v-text-field
+                              v-model="inputValue.end"
+                              label="To Date"
+                              prepend-inner-icon="mdi-calendar"
+                              v-on="inputEvents.end"
+                              outlined
+                              class="border focus:border-indigo-300"
+                              ></v-text-field>
+                        </div>
+                      </template>
+                    </vc-date-picker>
+
+                  </v-col>
+
+                  <v-col
+                    cols="12"
+                    v-else
+                  >
+
                   <v-menu
                       v-model="menu"
                       :close-on-content-click="false"
@@ -65,11 +118,13 @@
                         <v-text-field
                           v-model="editedItem.log_date"
                           label="Log Date"
-                          prepend-icon="mdi-calendar"
+                          prepend-inner-icon="mdi-calendar"
                           readonly
                           v-bind="attrs"
                           v-on="on"
-                        ></v-text-field>
+                          outlined
+                        >
+                        </v-text-field>
                       </template>
                       <v-date-picker
                         v-model="editedItem.log_date"
@@ -77,14 +132,15 @@
                       >
                       </v-date-picker>
                     </v-menu>
-
                   </v-col>
+
 
                   <v-col
                     cols="12"
                   >
                     <v-text-field
                       v-model="editedItem.log_hour"
+                      prepend-inner-icon="mdi mdi-timer-outline"
                       label="Log Hour"
                       outlined
                     ></v-text-field>
@@ -158,8 +214,13 @@
     name: "ProjectLog",
     data: () => ({
       menu: false,
+      period: false,
       dialog: false,
       dialogDelete: false,
+      range: {
+        start: new Date(),
+        end: new Date(),
+      },
       headers: [
         {
           text: 'Project ',
@@ -167,7 +228,7 @@
           sortable: false,
           value: 'project_id',
         },
-        { text: 'Log Description', value: 'log_description' },
+        { text: 'Task', value: 'task_id' },
         { text: 'Log Hours', value: 'log_hour' },
         { text: 'Log Date', value: 'log_date' },
         { text: 'Created Date', value: 'created_date' },
@@ -178,6 +239,7 @@
       editedItem: {
         id: null,
         project_id: null,
+        task_id: null,
         log_description: '',
         user_id: null,
         log_hour: null,
@@ -186,6 +248,7 @@
       defaultItem: {
         id: null,
         project_id: null,
+        task_id: null,
         log_description: '',
         user_id: null,
         log_hour: null,
@@ -273,6 +336,7 @@
             method: "PUT",
             data: {
               "project_id": this.editedItem.project_id,
+              "task_id": this.editedItem.task_id,
               "log_description": this.editedItem.log_description,
               "user_id": 1,
               "log_hour": this.editedItem.log_hour,
@@ -291,10 +355,14 @@
             method: "POST",
             data: {
               "project_id": this.editedItem.project_id,
+              "task_id": this.editedItem.task_id,
               "log_description": this.editedItem.log_description,
               "user_id": 1,
               "log_hour": this.editedItem.log_hour,
-              "log_date": this.editedItem.log_date
+              "log_date": this.editedItem.log_date,
+              "period": this.period,
+              "from_date": this.range.start,
+              "to_date": this.range.end,
               }
           })
           .then(() => {

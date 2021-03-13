@@ -1,7 +1,7 @@
 <template>
   <v-data-table
     :headers="headers"
-    :items="projects"
+    :items="tasks"
     sort-by="id"
     class="elevation-3 ma-6"
   >
@@ -21,7 +21,7 @@
               v-bind="attrs"
               v-on="on"
             >
-              New Project
+              New Task
             </v-btn>
           </template>
           <v-card>
@@ -128,7 +128,7 @@
   import axios from "axios";
 
   export default {
-    name: "Project",
+    name: "Task",
     data: () => ({
       dialog: false,
       dialogDelete: false,
@@ -144,7 +144,7 @@
         { text: 'Created Date', value: 'created_date' },
         { text: 'Actions', value: 'actions', sortable: false },
       ],
-      projects: [],
+      tasks: [],
       editedIndex: -1,
       editedItem: {
         id: null,
@@ -181,9 +181,9 @@
 
     methods: {
       initialize () {
-        axios.get('http://localhost:3001/project')
+        axios.get('http://localhost:3001/task')
       .then((response) => {
-          this.projects = response.data;
+          this.tasks = response.data;
       })
       .catch((err) => {
           console.log('Not Received', err);
@@ -191,20 +191,20 @@
       },
 
       editItem (item) {
-        this.editedIndex = this.projects.indexOf(item)
+        this.editedIndex = this.tasks.indexOf(item)
         this.editedItem = Object.assign({}, item)
         this.dialog = true
       },
 
       deleteItem (item) {
-        this.editedIndex = this.projects.indexOf(item)
+        this.editedIndex = this.tasks.indexOf(item)
         this.editedItem = Object.assign({}, item)
         this.dialogDelete = true
       },
 
       deleteItemConfirm () {
         axios({
-          url: "http://localhost:3001/project/" + this.editedItem.id,
+          url: "http://localhost:3001/task/" + this.editedItem.id,
           method: "DELETE"
         })
         .then(() => {
@@ -236,7 +236,7 @@
       save () {
         if (this.editedIndex > -1) {
           axios({
-            url: "http://localhost:3001/project/" + this.editedItem.id,
+            url: "http://localhost:3001/task/" + this.editedItem.id,
             method: "PUT",
             data: {
               "title": this.editedItem.title,
@@ -252,7 +252,7 @@
           });
         } else {
           axios({
-            url: "http://localhost:3001/project",
+            url: "http://localhost:3001/task",
             method: "POST",
             data: {
               "title": this.editedItem.title,

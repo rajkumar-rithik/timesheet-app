@@ -68,8 +68,13 @@ export default {
       },
       {
         title: 'Project',
-        icon: 'mdi mdi-briefcase-check',
+        icon: 'mdi mdi-briefcase-variant',
         to: '/project',
+      },
+      {
+        title: 'Task',
+        icon: 'mdi mdi-clipboard-check',
+        to: '/task',
       },
     ]
   })

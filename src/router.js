@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Project from './views/Project.vue'
 import ProjectLog from './views/ProjectLog.vue'
 import Timesheet from './views/Timesheet.vue'
+import Task from './views/Task.vue'
 
 Vue.use(Router)
 
@@ -23,6 +24,11 @@ export default new Router({
             path: '/log',
             name: 'log',
             component: ProjectLog,
+        },
+        {
+            path: '/task',
+            name: 'task',
+            component: Task,
         },
     ],
 })
